@@ -18,7 +18,7 @@ export async function uploadToS3 (file : File){
         const upload = s3.upload(params).on('httpUploadProgress', (e)=>{
             console.log("Uploading to S3", ((e.loaded/e.total)*100).toString());
         }).promise();
-        upload.then(()=>{
+        await upload.then(()=>{
             console.log("Successfully Uploaded to S3 ", file_key);
         })
 

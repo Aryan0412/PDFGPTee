@@ -1,5 +1,8 @@
 import toast from "react-hot-toast";
 import AWS from 'aws-sdk';
+import fs from 'fs';
+import os from 'os';
+import path from "path";
 
 export async function downloadFromS3(file_key : string) {
     try{
@@ -15,9 +18,13 @@ export async function downloadFromS3(file_key : string) {
             Key : file_key
         };
         const obj = await s3.getObject(params).promise();
+        const tmpDir = os.tmpdir();
+        const file_name = path.join(tmpDir, `pdf-${Date.now()}.pdf`);
+        fs.writeFileSync(file_name, obj?.Body as Buffer);
+        return file_name;
         
     }catch(error){
-        toast.error("Error in downloading file");
+        console.error("Error in downloading file:", error);
         return null;
     }
 } 

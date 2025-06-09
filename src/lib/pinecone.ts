@@ -1,7 +1,11 @@
-import {Pinecone} from '@pinecone-database/pinecone';
+import {Pinecone, PineconeRecord} from '@pinecone-database/pinecone';
 import { downloadFromS3 } from './s3-server';
 import { PDFLoader } from "@langchain/community/document_loaders/fs/pdf";
 import {Document, RecursiveCharacterTextSplitter} from '@pinecone-database/doc-splitter';
+import { getEmbeddings } from './embeddings';
+import md5 from 'md5';
+import { convertToAscii } from './utils';
+
 
 let pinecone : Pinecone | null = null ;
 export const getPineconeClient = async () => {
@@ -10,7 +14,6 @@ export const getPineconeClient = async () => {
             apiKey : process.env.PINECONE_API_KEY as string
         });
         return pinecone;
-
     }
 }
 
@@ -32,14 +35,41 @@ export const loadS3IntoPinecode = async (file_key : string) => {
     const pages : PDFPAGE[] = (await loader.load()) as PDFPAGE[];
 
     // 2. Segment pdf pages into smaller paragraph.
-    const documents = await Promise.all(pages.map(page=>prepareDocument(page)));
-    return pages;
+    const documents = await Promise.all(pages.map(page=>prepareDocument(page))); // [array of documents converted into small documents]
+    const vectors = await Promise.all(documents.flat().map((doc)=>embedDocuments(doc)));
+
+    // Upload to pinecone
+    const pineconeClient = await getPineconeClient();
+    const pineconeIndex = pineconeClient?.Index('pdfgptee');
+    console.log("Inserting embeddings into pinecone");
+    const namespace : string = convertToAscii(file_key);
+    await pineconeIndex?.namespace(namespace).upsert(vectors);
+    return documents[0];
 }
+
+async function embedDocuments (doc : Document) {
+    try{
+        const embeddings = await getEmbeddings(doc.pageContent);
+        const hash = md5(doc.pageContent);
+        return {
+            id : hash,
+            values : embeddings,
+            metadata : {
+                text : doc.metadata.text,
+                pageNumber : doc.metadata.pageNumber
+            }
+        } as PineconeRecord
+    }catch(error){
+        console.error("Error embedding documents : ", error); 
+        throw error;
+    }
+}
+
+
 
 export const truncateStringByBytes = (str : string, bytes : number) => {
     const enc = new TextEncoder();
     return new TextDecoder('utf-8').decode(enc.encode(str).slice(0, bytes));
-
 }
 
 async function prepareDocument(page : PDFPAGE){

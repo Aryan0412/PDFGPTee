@@ -11,6 +11,8 @@ export const chats = pgTable('chats', {
     fileKey : text('file_key').notNull()
 });
 
+export type drizzleChat = typeof chats.$inferSelect;
+
 export const messages = pgTable('message', {
     id : serial('id').primaryKey(),
     chatId : integer('chat_id').references(() => chats.id), // One to many relationship

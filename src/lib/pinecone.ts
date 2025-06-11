@@ -10,11 +10,16 @@ import { convertToAscii } from './utils';
 let pinecone : Pinecone | null = null ;
 export const getPineconeClient = async () => {
     if(!pinecone){
+        let apiKey = process.env.PINECONE_API_KEY as string;
+        if(!apiKey){
+            throw new Error("Pinecone API key is not set");
+        }
         pinecone = new Pinecone({
             apiKey : process.env.PINECONE_API_KEY as string
         });
         return pinecone;
     }
+    return pinecone;
 }
 
 type PDFPAGE = {

@@ -1,3 +1,4 @@
+import { timeStamp } from 'console';
 import {integer, pgEnum, pgTable, serial, text, timestamp, varchar} from 'drizzle-orm/pg-core'
 
 export const userSystemEnum = pgEnum('user_system_enum', ['system', 'user']);
@@ -18,7 +19,14 @@ export const messages = pgTable('message', {
     chatId : integer('chat_id').references(() => chats.id), // One to many relationship
     content : text('content').notNull(),
     createdAt : timestamp('created_at').notNull().defaultNow(),
-    role : userSystemEnum('role').notNull()
+    role : userSystemEnum('role').notNull()    
+});
 
-    
+export const userSubscription = pgTable('user_subscription', {
+    id : serial('id').primaryKey(),
+    userId : varchar("user_id", {length : 256}).notNull().unique(),
+    stripeCustomerId : varchar("stripe_customer_id", {length : 256}).notNull().unique(),
+    stripeSubscriptionId : varchar("stripe_subscription_id", {length : 256}).unique(),
+    stripePriceId : varchar("stripe_price_id", {length : 256}),
+    stripeCurrentPeriodEnd : timestamp("stripe_current_period_end"), 
 });

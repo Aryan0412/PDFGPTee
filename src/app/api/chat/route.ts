@@ -2,13 +2,13 @@ import { Configuration, OpenAIApi } from 'openai-edge';
 import { streamText } from 'ai';
 import { openai } from '@ai-sdk/openai';
 import { db } from '@/lib/db';
-import { chats } from '@/lib/db/schema';
+import { chats , messages as _messages } from '@/lib/db/schema';
 import { eq } from 'drizzle-orm';
 import { NextResponse } from 'next/server';
 import { getContext } from '@/lib/context';
 import { Message } from '@ai-sdk/react';
 
-export const runtime = 'node.js';
+// export const runtime = 'edge';
 
 export async function POST(req: Request) {
     try {
@@ -42,10 +42,29 @@ export async function POST(req: Request) {
             `,
         };
 
+        // stroing user query in db
+        await db.insert(_messages).values({
+            chatId : chatId,
+            content : lastMessage.content,
+            role : 'user',
+        });
+
         const result = await streamText({
             model: openai('gpt-3.5-turbo'), // this openai method gets the api key by default from env
             messages : [prompt, ...messages.filter((message : Message) => message.role === 'user')],
+            onFinish : async (response)=>{
+
+                // storing system response in db
+                await db.insert(_messages).values({
+                    chatId : chatId,
+                    content : response?.text,
+                    role : 'system'
+                })
+            }
         });
+
+
+
         return result.toDataStreamResponse();
     } catch (error) {
 

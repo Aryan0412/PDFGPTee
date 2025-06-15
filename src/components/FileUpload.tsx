@@ -1,8 +1,8 @@
 'use client'
 import { uploadToS3 } from '@/lib/s3';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { Inbox, Loader2 } from 'lucide-react';
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDropzone } from 'react-dropzone';
 import axios from 'axios'
 import toast from 'react-hot-toast';
@@ -18,6 +18,14 @@ const FileUpload = () => {
             return response.data;
         }
     });
+    const {data, isLoading} = useQuery({
+        queryKey : ["check-subscription"],
+        queryFn : async () => {
+            const response = await axios.get('/api/free-trial');
+            return response.data;
+        }
+        
+    })
     const { getRootProps, getInputProps } = useDropzone({
         accept: { 'application/pdf': ['.pdf'] },
         maxFiles: 1,
@@ -57,11 +65,11 @@ const FileUpload = () => {
             <div {...getRootProps({
                 className: 'border-2 border-dashed rounded-xl p-8 cursor-pointer bg-gray-50 flex justify-center items-center flex-col'
             })}>
-                <input {...getInputProps()} />
+                <input {...getInputProps()} disabled={!data?.isSubscribed} />
                 {
                     uploading || isPending ? (<><Loader2 className='h-10 w-10 text-blue-500 animate-spin' /></>) : (<>
                         <Inbox className='w-10 h-10 text-blue-500' />
-                        <p className='mt-2 text-sm text-slate-400'>Drop PDF here or click to upload</p>
+                        <p className='mt-2 text-sm text-slate-400'>{data?.isSubscribed ? "Drop PDF here or click to upload" : "Free trial is over"}</p>
                     </>)
                 }
 

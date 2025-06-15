@@ -1,17 +1,23 @@
 'use client'
 import { drizzleChat } from '@/lib/db/schema'
 import Link from 'next/link';
-import React from 'react'
+import React, { useState } from 'react'
 import { Button } from './button';
 import { MessageCircle, PlusCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import axios from 'axios';
+import { useQueries } from '@tanstack/react-query';
+import SubscriptionButton from './SubscriptionButton';
+import { checkSubscription } from '@/lib/subscription';
 
 type Props = {
     chats: drizzleChat[];
     chatId: number;
+    isPro : boolean;
 }
 
-const ChatSideBar = ({ chats, chatId }: Props) => {
+const ChatSideBar = ({ chats, chatId, isPro }: Props) => {
+
     return (
         <div className='w-full h-screen p-4 text-gray-200 bg-gray-900 '>
             <Link href={'/'}>
@@ -44,6 +50,7 @@ const ChatSideBar = ({ chats, chatId }: Props) => {
                         Source
                     </Link>
                 </div>
+                <SubscriptionButton isPro={isPro} />
             </div>
         </div>
     )

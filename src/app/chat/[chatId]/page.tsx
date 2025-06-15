@@ -3,6 +3,7 @@ import ChatSideBar from '@/components/ui/ChatSideBar';
 import PdfViewer from '@/components/ui/PdfViewer';
 import { db } from '@/lib/db';
 import { chats } from '@/lib/db/schema';
+import { checkSubscription } from '@/lib/subscription';
 import { auth } from '@clerk/nextjs/server';
 import { eq } from 'drizzle-orm';
 import { redirect } from 'next/navigation';
@@ -21,6 +22,7 @@ const ChatPage = async (props : Props) => {
   if (!userId) {
     return redirect('/sign-in');
   }
+  const isPro = await checkSubscription();
 
   const _chats = await db.select().from(chats).where(eq(chats.userId, userId)); // making query to database that, get the list of chats from db table chats where chats.userId is equal to userId;
   if (!_chats) {
@@ -35,7 +37,7 @@ const ChatPage = async (props : Props) => {
     <div className='flex max-h-screen overflow-scroll'>
       <div className='flex w-full max-h-screen overflow-scroll'>
         <div className='flex-[1] max-w-xs '>
-          <ChatSideBar chatId={parseInt(chatId)} chats={_chats} />
+          <ChatSideBar chatId={parseInt(chatId)} chats={_chats} isPro={isPro} />
         </div>
         <div className='max-h-screen p-4 overflow-scroll flex-[5]'>
           <PdfViewer pdf_url={currentChat?.pdfUrl || ''} />

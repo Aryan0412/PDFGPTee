@@ -1,10 +1,8 @@
 import { db } from "@/lib/db";
 import { userSubscription } from "@/lib/db/schema";
 import { stripe } from "@/lib/stripe";
-import {  } from "@clerk/nextjs";
 import { auth, currentUser } from "@clerk/nextjs/server";
 import { eq } from "drizzle-orm";
-import { url } from "inspector";
 import { NextResponse } from "next/server";
 
 const return_url = process.env.NEXT_BASE_URL + '/';

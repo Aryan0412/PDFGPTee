@@ -1,9 +1,6 @@
 import { SignIn } from "@clerk/nextjs";
-import { auth } from "@clerk/nextjs/server";
 
 export default async function Page() {
-    const { userId } = await auth();
-
     return (
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
             <SignIn />

@@ -3,7 +3,7 @@ import { db } from "./db";
 import { userSubscription } from "./db/schema";
 import { eq } from "drizzle-orm";
 
-const DAY_IN_MILISECONDS = 1000 * 60 * 60 * 24;
+// const DAY_IN_MILISECONDS = 1000 * 60 * 60 * 24;
 
 export const checkSubscription = async () => {
     const { userId } = await auth();

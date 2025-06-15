@@ -1,14 +1,11 @@
 'use client'
 import { drizzleChat } from '@/lib/db/schema'
 import Link from 'next/link';
-import React, { useState } from 'react'
+import React from 'react'
 import { Button } from './button';
 import { MessageCircle, PlusCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import axios from 'axios';
-import { useQueries } from '@tanstack/react-query';
 import SubscriptionButton from './SubscriptionButton';
-import { checkSubscription } from '@/lib/subscription';
 
 type Props = {
     chats: drizzleChat[];

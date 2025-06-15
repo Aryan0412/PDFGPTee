@@ -1,4 +1,3 @@
-import toast from "react-hot-toast";
 import AWS from 'aws-sdk';
 import fs from 'fs';
 import os from 'os';

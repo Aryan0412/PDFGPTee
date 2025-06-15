@@ -1,4 +1,3 @@
-import { Configuration, OpenAIApi } from 'openai-edge';
 import { streamText } from 'ai';
 import { openai } from '@ai-sdk/openai';
 import { db } from '@/lib/db';
@@ -67,6 +66,6 @@ export async function POST(req: Request) {
 
         return result.toDataStreamResponse();
     } catch (error) {
-
+        console.error("Error : ", error);
     }
 }

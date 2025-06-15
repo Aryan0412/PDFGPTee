@@ -10,7 +10,7 @@ import { convertToAscii } from './utils';
 let pinecone : Pinecone | null = null ;
 export const getPineconeClient = async () => {
     if(!pinecone){
-        let apiKey = process.env.PINECONE_API_KEY as string;
+        const apiKey = process.env.PINECONE_API_KEY as string;
         if(!apiKey){
             throw new Error("Pinecone API key is not set");
         }
@@ -78,7 +78,8 @@ export const truncateStringByBytes = (str : string, bytes : number) => {
 }
 
 async function prepareDocument(page : PDFPAGE){
-    let {pageContent, metadata} = page;
+    let {pageContent} = page;
+    const {metadata} = page;
     pageContent = pageContent.replace(/\n/g, '');
 
     // split the docs 

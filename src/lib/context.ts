@@ -29,6 +29,6 @@ export async function getContext(query: string, file_key: string) {
         text: string,
         pageNumber: number
     }
-    let docs = matches.map(match => (match.metadata as metadata).text);
+    const docs = matches.map(match => (match.metadata as metadata).text);
     return docs.join('\n');
 }

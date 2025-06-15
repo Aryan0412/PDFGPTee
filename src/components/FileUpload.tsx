@@ -2,7 +2,7 @@
 import { uploadToS3 } from '@/lib/s3';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { Inbox, Loader2 } from 'lucide-react';
-import React, { useEffect, useState } from 'react'
+import React, {useState } from 'react'
 import { useDropzone } from 'react-dropzone';
 import axios from 'axios'
 import toast from 'react-hot-toast';
@@ -18,7 +18,7 @@ const FileUpload = () => {
             return response.data;
         }
     });
-    const {data, isLoading} = useQuery({
+    const {data} = useQuery({
         queryKey : ["check-subscription"],
         queryFn : async () => {
             const response = await axios.get('/api/free-trial');

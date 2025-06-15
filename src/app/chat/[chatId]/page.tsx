@@ -10,14 +10,11 @@ import { redirect } from 'next/navigation';
 import React from 'react'
 
 type Props = {
-  params: {
-    chatId: string;
-  }
-}
+  params: Promise<{ chatId: string }>;
+};
 
-const ChatPage = async (props : Props) => {
-  const {params} = props;
-  const chatId = await params.chatId
+const ChatPage = async ({params} : Props) => {
+  const {chatId} = await params;
   const { userId } = await auth();
   if (!userId) {
     return redirect('/sign-in');

@@ -26,4 +26,41 @@
 - **External Services**:
   - OpenAI SDK (for AI responses)
   - AWS S3 (for file storage)
-  - Stripe (for payment pro
+  - Stripe (for payment processing)
+
+---
+
+## 📁 Project Structure
+
+```bash
+PDFGPTee/
+├── .git/
+├── .next/
+├── node_modules/
+├── public/
+├── src/
+├── app/
+│   ├── api/
+│   ├── chat/
+│   ├── sign-in/
+│   ├── sign-up/
+│   ├── favicon.ico
+│   ├── globals.css
+│   ├── layout.tsx
+│   └── page.tsx
+├── components/
+│   ├── ui/
+│   ├── FileUpload.tsx
+│   └── Providers.tsx
+├── lib/
+│   └── middleware.ts
+├── .env
+├── .gitignore
+├── components.json
+├── drizzle.config.ts
+├── eslint.config.mjs
+├── next-env.d.ts
+├── next.config.ts
+├── package-lock.json
+├── package.json
+├── postcss.config.mjs

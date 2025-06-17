@@ -3,6 +3,11 @@
 **An AI-driven Q&A system with PDF support, built using Next.js 15, OpenAI, and Clerk, featuring real-time chat, vector search, and modern UI components.**
 
 ---
+## Architecture
+![IMG_0012](https://github.com/user-attachments/assets/ea3b0789-9332-42c0-ab89-f742d252fc3e)
+
+![IMG_0013](https://github.com/user-attachments/assets/3751f54a-190d-49a8-b9f6-eb4e0e0ac4f9)
+
 
 ## 🚀 Tech Stack
 
